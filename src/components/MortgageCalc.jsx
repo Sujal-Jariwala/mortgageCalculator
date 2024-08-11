@@ -65,29 +65,38 @@ function MortgageCalc() {
 
   const handleSubmit = () => {
     const isValid = validateInputs();
-
+  
     if (isValid) {
       let principal = parseFloat(mortgageAmount);
       let monthlyInterestRate = parseFloat(interest) / (12 * 100);
       let numberOfMonths = parseFloat(mortgageTerm) * 12;
-
+  
+      if (monthlyInterestRate === 0 || numberOfMonths === 0 || principal === 0) {
+        setMonthlyPayment('0');
+        setTotalPayments('0');
+        setInterestOnlyPayment('0');
+        setMonthlyInterestPayment('0');
+        setFormSubmit(true);
+        return;
+      }
+  
       let emi = (principal * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, numberOfMonths)) /
         (Math.pow(1 + monthlyInterestRate, numberOfMonths) - 1);
       let monthlyInterest = principal * monthlyInterestRate;
       let totalPayment = emi * numberOfMonths;
       let totalInterest = totalPayment - principal;
-
+  
       setMonthlyPayment(emi);
       setTotalPayments(totalPayment);
       setInterestOnlyPayment(totalInterest);
       setMonthlyInterestPayment(monthlyInterest);
-
+  
       setFormSubmit(true);
     } else {
       setFormSubmit(false);
     }
   };
-
+  
   const clearAll = () => {
     setMortgageAmount('');
     setMortgageTerm('');
@@ -137,7 +146,7 @@ function MortgageCalc() {
                   <span className='absolute right-0 top-full mt-2 text-[#D73328] text-sm font-semibold'>This field is required</span>
                 )}
                 {mortgageAmountNanError && (
-                  <span className='absolute right-0 bottom-12 mt-2 text-[#D73328] text-sm font-semibold'>Please enter numbers only</span>
+                  <span className='absolute right-0 bottom-12 mt-2 text-[#D73328] text-xs font-semibold'>Amount must be higher than 0</span>
                 )}
               </div>
             </div>
@@ -157,7 +166,7 @@ function MortgageCalc() {
                     <span className='absolute left-0 top-full mt-2 text-[#D73328] text-sm font-semibold'>This field is required</span>
                   )}
                   {mortgageTermNanError && (
-                    <span className='absolute right-0 left-0 bottom-14 mt-2 text-[#D73328] text-sm font-semibold'>Please enter numbers only</span>
+                    <span className='absolute right-0 left-0 bottom-14 mt-2 text-[#D73328] text-sm font-semibold'>Term must be higher than 0</span>
                   )}
                 </div>
               </div>
@@ -176,7 +185,7 @@ function MortgageCalc() {
                     <span className='absolute top-full left-0 mt-2 text-[#D73328] text-sm font-semibold'>This field is required</span>
                   )}
                   {interestNanError && (
-                    <span className='absolute top-full left-0 right-0 mt-6 text-[#D73328] text-sm font-semibold'>Please enter numbers only</span>
+                    <span className='absolute top-full left-0 right-0 mt-6 text-[#D73328] text-sm font-semibold'>Interest must be higher than 0</span>
                   )}
                 </div>
               </div>
